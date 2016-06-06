@@ -23,7 +23,7 @@ class MyView(View):
 		patch_response_headers(response)
 		return response
 
-	#Override this method to tell what to do when of the methods in http_method_names is called
+	#Override this method to tell what to do when one of the methods in http_method_names is called
 	def http_method_not_allowed(request, *args, **kwargs):
 		return HttpResponse("Method not allowed",status=405)
 		#return any type of response here
