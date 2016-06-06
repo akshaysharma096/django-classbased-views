@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+COOKIE_SALT='MNKN4EZZX2+5#2H>75.Wq?-^j-_cIO=]bL|<ByL$K@aF@)nJ~{H1yhbF-256HJkl'
 
 # Application definition
 
@@ -103,13 +104,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Set this as true to set e-tag
+USE_ETAGS=True
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -122,3 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SECURE_BROWSER_XSS_FILTER=True
+
+SECURE_CONTENT_TYPE_NOSNIFF=True
