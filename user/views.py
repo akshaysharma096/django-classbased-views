@@ -28,6 +28,7 @@ class MyView(View):
 		response.__setitem__('status',200)
 		response.__setitem__('page_id',str(uuid.uuid4().hex))
 		patch_vary_headers(response,['Etag','Cookie','User-Agent'])
+		patch_cache_control(response)
 		# response.set_signed_cookie('__ga_id__','112(8*(89&!891292',salt=settings.COOKIE_SALT,httponly=True)
 		# patch_response_headers(response)
 		return response
