@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE_CLASSES = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,9 +51,28 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
+#CACHING
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT':6000,
+        'OPTIONS': {
+            'MAX_ENTRIES': 10000
+        },
+
+    }
+}
+
+KEY_PREFIX='cache'
+CACHE_MIDDLEWARE_KEY_PREFIX='production_site'
+CACHE_MIDDLEWARE_SECONDS=6000
+
 ROOT_URLCONF = 'ClassBased.urls'
+
 
 TEMPLATES = [
     {
