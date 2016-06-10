@@ -7,5 +7,5 @@ handler400, handler403, handler404, handler500
 )
 
 urlpatterns=[
-	url(r'^$',MyView.as_view(message='This message is overriden'),name='MyView'),			#overriding class attribute 
+	url(r'^$',MyView.as_view(),name='MyView'),			#overriding class attribute 
 ]

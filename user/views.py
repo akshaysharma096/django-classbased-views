@@ -17,13 +17,15 @@ class MyView(View):
 
 	#specifies the http methods allowed in this view
 	http_method_names=['post','get']
-	message='Hello niggaz'
+	message='<div id="myview">This is a class based view response.</div>'
+	content_type='text/html'
+	charset='utf-8'
 
 	@method_decorator(gzip_page)
 	@method_decorator(condition(etag_func=None,last_modified_func=None))
 	def get(self,request,*args,**kwargs):
 		# response=HttpResponse('<div id="myview">This is a class based view response.</div>',content_type='text/html',charset='utf-8')
-		response=HttpResponse(self.message)
+		response=HttpResponse(self.message,content_type=self.content_type,charset=self.charset)
 		response.__setitem__('x-uuid',uuid.uuid4().hex)		#set header explicitly
 		response.__setitem__('status',200)
 		response.__setitem__('page_id',str(uuid.uuid4().hex))
