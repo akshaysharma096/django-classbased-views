@@ -65,8 +65,9 @@ class GetUserView(ListView):
 class GetParticularUserView(ListView):
 	http_method_names=['get']
 	template_name='one_user.html'
-
-
+	# context_object_name='user'		# set context either by this or by get_context_data
+	'''queryset=User.objects.all()'''	# one way to set the data in the context
+	
 	def get_queryset(self):
 		# define the query set to be used here.
 		self.user=get_object_or_404(User,id=self.kwargs['id']) 
