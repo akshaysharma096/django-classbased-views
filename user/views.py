@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseNotAllowed,JsonResponse
 from django.views.generic import View
 from django.conf import settings
+from django.views.generic.base import TemplateView
 import uuid
 from .models import User
 from django.utils.cache import patch_cache_control,get_max_age,patch_response_headers,get_cache_key,patch_vary_headers
@@ -75,3 +76,27 @@ class GetParticularUserView(ListView):
 		context=super(GetParticularUserView,self).get_context_data(**kwargs)
 		context['user']=self.user
 		return context
+
+
+class TView(TemplateView):
+	'''
+		Methods, below are not available here.
+		Cannot set context using get_queryset or get_context_data
+		set context using TemplateResponse()
+	'''
+
+	http_method_names=['get']
+	template_name='template_view.html'
+
+	def get(self,request,*args,**kwargs):
+		return TemplateResponse(request,self.template_name,{'user':User.objects.get(id=1)})
+
+	# def get_queryset(self):
+	# 	# define the query set to be used here.
+	# 	self.user=get_object_or_404(User,id=self.kwargs['id']) 
+	# 	return self.user
+
+	# def get_context_data(self,**kwargs):
+	# 	context=super(GetParticularUserView,self).get_context_data(**kwargs)
+	# 	context['user']=self.user
+	# 	return context
