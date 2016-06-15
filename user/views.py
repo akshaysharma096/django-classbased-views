@@ -3,6 +3,7 @@ from django.http import HttpResponse,HttpResponseNotAllowed,JsonResponse
 from django.views.generic import View
 from django.conf import settings
 import uuid
+from .models import User
 from django.utils.cache import patch_cache_control,get_max_age,patch_response_headers,get_cache_key,patch_vary_headers
 from django.views.decorators.http import condition,etag,last_modified
 from django.utils.decorators import method_decorator
@@ -10,6 +11,9 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.gzip import gzip_page
 from django.views.decorators.vary import vary_on_headers
 from django.core.cache import cache
+from django.template.response import TemplateResponse
+from django.views.generic import ListView
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 class MyView(View):
@@ -20,12 +24,12 @@ class MyView(View):
 	message='<div id="myview">This is a class based view response.</div>'
 	content_type='text/html'
 	charset='utf-8'
+	# template_name='base.html'
 
 	@method_decorator(gzip_page)
 	@method_decorator(condition(etag_func=None,last_modified_func=None))
 	def get(self,request,*args,**kwargs):
-		# response=HttpResponse('<div id="myview">This is a class based view response.</div>',content_type='text/html',charset='utf-8')
-		response=HttpResponse(self.message,content_type=self.content_type,charset=self.charset)
+		response=TemplateResponse(request,self.template_name,{'number':1,'number_2':2})
 		response.__setitem__('x-uuid',uuid.uuid4().hex)		#set header explicitly
 		response.__setitem__('status',200)
 		response.__setitem__('page_id',str(uuid.uuid4().hex))
@@ -44,3 +48,30 @@ class MyView(View):
 		return response
 		#return any type of response here
 		# return JsonResponse(status=405,data={'not_allowed':True})
+
+class GetUserView(ListView):
+	http_method_names=['get','head']
+	queryset=User.objects.all()				#specify which model to populate
+	template_name='base.html'	#specify the template
+	context_object_name='users'	#context to be passed
+
+
+	def get_context_data(self,**kwargs):
+		context=super(GetUserView,self).get_context_data(**kwargs)
+		context['number']=1
+		return context
+
+class GetParticularUserView(ListView):
+	http_method_names=['get']
+	template_name='one_user.html'
+
+
+	def get_queryset(self):
+		# define the query set to be used here.
+		self.user=get_object_or_404(User,id=self.kwargs['id']) 
+		return self.user
+
+	def get_context_data(self,**kwargs):
+		context=super(GetParticularUserView,self).get_context_data(**kwargs)
+		context['user']=self.user
+		return context

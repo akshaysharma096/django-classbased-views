@@ -1,0 +1,11 @@
+<html>
+	<head></head>
+	<body>
+		{% for user in users %}
+			<div id="{{user.pk}}">
+				{{user.username}}
+			</div>
+		{% endfor %}
+		{{number}}
+	</body>
+</html>
