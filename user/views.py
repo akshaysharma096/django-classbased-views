@@ -4,7 +4,7 @@ from django.views.generic import View
 from django.conf import settings
 from django.views.generic.base import TemplateView
 import uuid
-from .models import User
+from .models import User,Author
 from django.utils.cache import patch_cache_control,get_max_age,patch_response_headers,get_cache_key,patch_vary_headers
 from django.views.decorators.http import condition,etag,last_modified
 from django.utils.decorators import method_decorator
@@ -16,9 +16,22 @@ from django.template.response import TemplateResponse
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 from .forms import ContactForm,ContactForm2
-from django.views.generic.edit import FormView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView,FormView
+from django.core.urlresolvers import reverse_lazy
 # Create your views here.
 
+
+class AuthorCreate(CreateView):
+    model = Author
+    fields = ['name']
+
+class AuthorUpdate(UpdateView):
+    model = Author
+    fields = ['name']
+
+class AuthorDelete(DeleteView):
+    model = Author
+    success_url = reverse_lazy('author-list')
 
 
 class ContactView(FormView):
@@ -35,7 +48,7 @@ class ContactView(FormView):
 	def form_valid(self,form):
 		form.send_email()
 		#calling a method in the form
-		form.save(id=12)
+		form.save()
 		return JsonResponse(status=200,data={'success':True})
 
 	# function that is called when the form is invlaid.
@@ -48,9 +61,6 @@ class ContactView(FormView):
 		context['form_1']=self.form_class()
 		context['form_2']=self.form_class_2()
 		return context
-
-	def form_invlaid(self,form):
-		return JsonResponse(status=400,data={'errors':self.form.errors.items()})
 
 class MyView(View):
 	#each class must be a subclass of View class
