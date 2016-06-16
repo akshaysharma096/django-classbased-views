@@ -18,16 +18,41 @@ from django.shortcuts import get_object_or_404
 from .forms import ContactForm,ContactForm2
 from django.views.generic.edit import CreateView, UpdateView, DeleteView,FormView
 from django.core.urlresolvers import reverse_lazy
+from slugify import slugify
 # Create your views here.
 
 
 class AuthorCreate(CreateView):
-    model = Author
-    fields = ['name']
+	#specify the model for whih model form has to be created
+	model=Author
+	#template name of the html file to use
+	template_name='author_create.html'
+	#fields to be populated.
+	fields=['name']
+
+	def form_valid(self,form):
+		#override this method to to do whatever you want
+		return JsonResponse(status=200,data={'success':True})
+
+	def form_invalid(self,form):
+		return HttpResponse("Nalle",status=400)
 
 class AuthorUpdate(UpdateView):
+	#same as above but here the Class is used to update a model instance
     model = Author
+    # how to find the slug in the url
+    slug_url_kwarg='slug'
     fields = ['name']
+    template_name='author_update.html'
+
+    #override this method to add more functionality for a UpdateView
+    def form_valid(self,form):
+    	# what to do before saving the result in db.
+    	#updating the db and the function automatically saves the changes.
+    	form.instance.slug=slugify(self.object.name) 			# model instance while updation is self.object 
+    	return JsonResponse(status=200,data=form.errors)
+   
+
 
 class AuthorDelete(DeleteView):
     model = Author

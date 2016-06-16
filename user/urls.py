@@ -13,6 +13,6 @@ urlpatterns=[
 	url(r'^t/(?P<id>[0-9]+)/$',TView.as_view(),name='T'),
 	url(r'^contact/$',ContactView.as_view(),name='contact'),
 	url(r'author/add/$', AuthorCreate.as_view(), name='author-add'),
-    url(r'author/(?P<pk>[0-9]+)/$', AuthorUpdate.as_view(), name='author-update'),
+    url(r'author/(?P<slug>[0-9A-Za-z_\-]+)/$', AuthorUpdate.as_view(), name='author-update'),
     url(r'author/(?P<pk>[0-9]+)/delete/$', AuthorDelete.as_view(), name='author-delete'),
 ]

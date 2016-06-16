@@ -16,6 +16,4 @@ class User(AbstractUser):
 
 class Author(models.Model):
     name = models.CharField(max_length=200)
-
-    def get_absolute_url(self):
-        return reverse('author-detail', kwargs={'pk': self.pk})
+    slug=models.SlugField(max_length=500,null=True)
