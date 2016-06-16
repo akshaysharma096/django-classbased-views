@@ -31,6 +31,7 @@ class ContactView(FormView):
 	# success_url='/thanks/'
 
 	#function to check the validity of form
+	#override the function to add own functionality
 	def form_valid(self,form):
 		form.send_email()
 		#calling a method in the form

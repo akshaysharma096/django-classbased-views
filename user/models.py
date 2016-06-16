@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 # Create your models here.
 
 class User(AbstractUser):
@@ -11,3 +12,10 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.username
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=200)
+
+    def get_absolute_url(self):
+        return reverse('author-detail', kwargs={'pk': self.pk})
