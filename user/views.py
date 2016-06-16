@@ -15,7 +15,41 @@ from django.core.cache import cache
 from django.template.response import TemplateResponse
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
+from .forms import ContactForm,ContactForm2
+from django.views.generic.edit import FormView
 # Create your views here.
+
+
+
+class ContactView(FormView):
+	'''
+		Inherit this View to create and validate  a form automatically.
+	'''
+	template_name='form.html'
+	form_class=ContactForm
+	form_class_2=ContactForm2
+	# success_url='/thanks/'
+
+	#function to check the validity of form
+	def form_valid(self,form):
+		form.send_email()
+		#calling a method in the form
+		form.save(id=12)
+		return JsonResponse(status=200,data={'success':True})
+
+	# function that is called when the form is invlaid.
+	def form_invalid(self,form):
+		return JsonResponse(status=400,data=form.errors)
+
+	def get_context_data(self,**kwargs):
+		#set context to pass to html
+		context=super(ContactView,self).get_context_data(**kwargs)
+		context['form_1']=self.form_class()
+		context['form_2']=self.form_class_2()
+		return context
+
+	def form_invlaid(self,form):
+		return JsonResponse(status=400,data={'errors':self.form.errors.items()})
 
 class MyView(View):
 	#each class must be a subclass of View class
@@ -36,8 +70,6 @@ class MyView(View):
 		response.__setitem__('page_id',str(uuid.uuid4().hex))
 		patch_vary_headers(response,['Etag','Cookie','User-Agent'])
 		patch_cache_control(response)
-		# response.set_signed_cookie('__ga_id__','112(8*(89&!891292',salt=settings.COOKIE_SALT,httponly=True)
-		# patch_response_headers(response)
 		return response
 
 	#Override this method to tell what to do when one of the methods in http_method_names is called

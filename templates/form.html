@@ -1,0 +1,14 @@
+<html>
+	<body>
+		<form action="{% url 'contact' %}" method="post">	
+			{% csrf_token %}
+			{{form_1}}
+			<input type="submit" value="submit">
+		</form>
+		<form action="{% url 'contact' %}" method="post">	
+			{% csrf_token %}
+			{{form_2}}
+			<input type="submit" value="submit">
+		</form>
+	</body>
+</html>
